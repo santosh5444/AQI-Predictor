@@ -1,4 +1,4 @@
-function CTA() {
+function CTA({ setCurrentPage }) {
   return (
     <section className="bg-[#003153] py-20 px-6">
       <div className="max-w-4xl mx-auto text-center">
@@ -6,7 +6,10 @@ function CTA() {
           Ready to Predict Air Quality?
         </h2>
         <p className="text-gray-200 mb-8 text-lg">Start exploring real-time air quality predictions, trends, andhealth insights powered by AI.</p>
-        <button className="px-8 py-3 bg-white text-[#0b0c0d] font-semibold rounded-xl transition-all duration-300 shadow-lg hover:scale-105">Get Started →</button>
+        <button onClick={() => {
+    setCurrentPage("predict");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }} className="px-8 py-3 bg-white text-[#0b0c0d] font-semibold rounded-xl transition-all duration-300 shadow-lg hover:scale-105">Get Started →</button>
       </div>
     </section>
   );

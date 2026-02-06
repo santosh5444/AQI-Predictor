@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function Navbar({ setCurrentPage }) {
+function Navbar({ setCurrentPage}) {
   const [open, setOpen] = useState(false);
 
   const navigate = (page) => {
@@ -85,4 +85,4 @@ function Navbar({ setCurrentPage }) {
     </header>
   );
 }
-export default Navbar;
+export default Navbar; 

@@ -2,23 +2,12 @@ function Footer({ setCurrentPage }) {
   return (
     <footer className="bg-gray-900 text-gray-300 py-12 px-6">
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10">
-
-        {/* BRAND */}
         <div>
-          <h3 className="text-xl font-bold text-white mb-3">
-            Air Quality Forecasting
-          </h3>
-          <p className="text-sm leading-relaxed">
-            An AI-powered platform to predict air quality, analyze pollution
-            trends, and provide health insights for safer living.
-          </p>
+          <h3 className="text-xl font-bold text-white mb-3">Air Quality Forecasting</h3>
+          <p className="text-sm leading-relaxed">An AI-powered platform to predict air quality, analyze pollution trends, and provide health insights for safer living.</p>
         </div>
-
-        {/* QUICK LINKS */}
         <div>
-          <h4 className="text-lg font-semibold text-white mb-3">
-            Quick Links
-          </h4>
+          <h4 className="text-lg font-semibold text-white mb-3">Quick Links</h4>
           <ul className="space-y-2 text-sm">
             <li onClick={() => setCurrentPage("dashboard")} className="hover:text-white cursor-pointer">
               Home
@@ -34,8 +23,6 @@ function Footer({ setCurrentPage }) {
             </li>
           </ul>
         </div>
-
-        {/* RESOURCES (UNCHANGED) */}
         <div>
           <h4 className="text-lg font-semibold text-white mb-3">
             Resources
@@ -70,5 +57,4 @@ function Footer({ setCurrentPage }) {
     </footer>
   );
 }
-
 export default Footer;

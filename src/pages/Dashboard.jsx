@@ -3,7 +3,7 @@ import KeyFeatures from "../components/KeyFeatures";
 import AirQualityInfo from "../components/AirQualityInfo";
 import CTA from "../components/CTA";
 
-function Dashboard() {
+function Dashboard({ setCurrentPage }) {
   return (
     <>
       <div className="relative min-h-screen overflow-hidden">
@@ -22,18 +22,16 @@ function Dashboard() {
           </p>
 
           <div className="flex gap-4">
-            <button className="px-6 py-3 bg-white hover:bg-black hover:text-white text-black rounded-lg font-semibold transition">
+            <button onClick={() => setCurrentPage("predict")} className="px-6 py-3 bg-white hover:bg-black hover:text-white text-black rounded-lg font-semibold transition">
               Predict AQI Now →
             </button>
-            <button className="px-6 py-3 border border-white text-white hover:bg-white hover:text-black rounded-lg font-semibold transition">
-              Learn More
-            </button>
+            <a href="#what-is-aqi" className="px-6 py-3 border border-white text-white hover:bg-white hover:text-black rounded-lg font-semibold transition">Learn More</a>
           </div>
         </div>
       </div>
       <AirQualityInfo />
       <KeyFeatures />
-      <CTA />
+      <CTA setCurrentPage={setCurrentPage} />
     </>
   );
 }

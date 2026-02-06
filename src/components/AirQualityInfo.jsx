@@ -1,7 +1,6 @@
 import { useState } from "react";
 
 const factors = {
-  AQI: "The Air Quality Index (AQI) is a scale used to report daily air quality, turning complex pollutant data into a single, easy-to-understand number, color, and category (like Good, Moderate, Poor, Severe) to show how polluted the air is and its potential health effects, with higher numbers indicating worse pollution and greater health risks. It helps people understand if air quality is healthy or if sensitive groups should take precautions, covering pollutants like particulate matter, ozone, and carbon monoxide.",
   PM25: "PM2.5 refers to fine particulate matter air pollution, consisting of tiny particles or droplets with a diameter of 2.5 micrometers or less—about 30 times smaller than a human hair. Primarily produced through combustion (vehicles, power plants, wildfires), these particles are dangerous because they can travel deep into the lungs and enter the bloodstream",
   PM10: "PM10 refers to inhalable coarse particulate matter (solid or liquid) with a diameter of 10 micrometers or less—about 1/5 to 1/7 the width of a human hair. These particles, including dust, smoke, soot, and chemicals, are small enough to penetrate deep into the lungs. ",
   AOD: "AOD stands for Aerosol Optical Depth, a measure of how sunlight is blocked by particles (dust, smoke, pollution) in the atmosphere, indicating total column aerosol loading. It is used to estimate surface-level PM2.5 (particle pollution) for AQI monitoring. AOD values less than 0.1 indicate clean air, while values over 1.0 signify significant haze.",
@@ -13,12 +12,30 @@ const factors = {
 };
 
 function AirQualityInfo() {
-  const [active, setActive] = useState("AQI");
+  const [active, setActive] = useState("PM25");
   return (
-    <section className="bg-gray-100 py-20 px-6">
+    <section id="what-is-aqi" className="bg-gray-100 py-20 px-6">
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-3xl font-bold text-gray-800 mb-4">Understanding Air Quality Factors</h2>
-        <p className="text-gray-600 mb-10 max-w-3xl">Click on a factor to learn what it means and how it affects health.</p>
+        <div className="mb-14">
+          <h2 className="text-3xl font-bold text-gray-800 mb-4">
+            What is AQI and Why Does It Matter?
+          </h2>
+          <p className="text-gray-600 leading-relaxed mb-4 ">
+            The Air Quality Index (AQI) is a standardized metric used to communicate how polluted the air currently is or how polluted it is expected to become. It converts complex air pollution data from multiple pollutants into a single number and category (such as Good, Moderate, Poor, or Severe) that is easy for the public to understand.
+          </p>
+          <p className="text-gray-600 leading-relaxed mb-4 ">
+            Monitoring AQI is essential because poor air quality directly impacts human health, ecosystems, and climate. Pollutants such as particulate matter (PM2.5, PM10), ozone, nitrogen dioxide, and carbon monoxide are linked to respiratory diseases, cardiovascular issues, and reduced life expectancy.
+          </p>
+          <p className="text-gray-600 leading-relaxed ">
+            Predicting AQI in advance is especially important as it enables early warnings, informed policy decisions, and preventive actions. Accurate AQI forecasts help governments, industries, and individuals minimize exposure, protect vulnerable groups, and plan sustainable urban and environmental strategies.
+          </p>
+        </div>
+        <h3 className="text-3xl font-bold text-gray-800 mb-4">
+          Understanding Air Quality Factors
+        </h3>
+        <p className="text-gray-600 mb-10 max-w-3xl">
+          Click on a factor below to learn what it represents and how it contributes to air quality and health impacts.
+        </p>
         <div className="flex flex-wrap gap-4 mb-10">
           {Object.keys(factors).map((key) => (
             <button
