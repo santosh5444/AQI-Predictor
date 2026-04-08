@@ -1,8 +1,3 @@
-Got you bro 🔥 — your README is already good, but I’ll upgrade it to **🔥 premium GitHub-level (resume + recruiter ready)**
-
-Here’s your **enhanced version** 👇 (just copy-paste)
-
----
 
 # 🚀 AQI Predictor — Intelligent Air Quality Forecasting Platform
 
