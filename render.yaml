@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: aqi-dashboard-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: ALLOWED_ORIGINS
+        sync: false   # set this manually in Render dashboard after frontend deploys

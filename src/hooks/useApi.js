@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 
 // Strict allowlist — only permit the known backend origin
 const ALLOWED_ORIGINS = ['http://localhost:3001', 'http://127.0.0.1:3001'];
-const _raw = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+const _raw = (import.meta.env.VITE_API_URL || 'http://localhost:3001').trim();
 const BASE = ALLOWED_ORIGINS.includes(_raw) ? _raw : 'http://localhost:3001';
 
 // ── Embedded ML data — page works even if backend is offline ──────────────────
