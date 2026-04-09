@@ -1,4 +1,4 @@
-/* global require, module, console */
+/* global require, module */
 'use strict';
 
 const router  = require('express').Router();

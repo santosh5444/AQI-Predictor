@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { createPortal } from 'react-dom';
 import { staggerContainer, staggerFlip, hoverLift, tapPress, fadeUp, viewport } from '../../animations/variants';
@@ -23,6 +23,20 @@ export default function KPICards({ data, liveAqi, liveLocText, liveLocDesc, onVi
   const catStr  = mean_overall <= 100 ? 'Satisfactory (51–100)' : 'Moderate (101–200)';
   const catStr2 = mean_overall <= 100 ? '"Satisfactory"' : '"Moderate"';
 
+  const [clock, setClock] = useState({ date: '', time: '' });
+  useEffect(() => {
+    const tick = () => {
+      const now = new Date();
+      setClock({
+        date: now.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }),
+        time: now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+      });
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, []);
+
   return (
     <div className="flex flex-col gap-4">
 
@@ -32,7 +46,14 @@ export default function KPICards({ data, liveAqi, liveLocText, liveLocDesc, onVi
         variants={fadeUp} initial="hidden" animate="visible"
       >
         <div>
-          <h2 className="text-lg font-bold text-slate-800">🏭 Visakhapatnam AQI Intelligence Dashboard</h2>
+          <h2 className="text-lg font-bold text-slate-800 flex items-center gap-3 flex-wrap">
+            🏭 Visakhapatnam AQI Intelligence Dashboard
+            <span className="flex items-center gap-2 pl-3 border-l border-slate-200" style={{ fontFamily: 'var(--font-mono)', fontSize: '0.72rem', fontWeight: 400 }}>
+              <span className="blink" style={{ width: 6, height: 6, background: '#34d399', boxShadow: '0 0 6px #34d399', borderRadius: '50%', display: 'inline-block' }} />
+              <span className="text-slate-600">{clock.date}</span>
+              <span className="text-slate-400">{clock.time}</span>
+            </span>
+          </h2>
           <p className="text-xs text-slate-400 mt-0.5">Real-time air quality monitoring · 2019–2025</p>
         </div>
         <div className="flex items-center gap-2">
@@ -131,7 +152,7 @@ export default function KPICards({ data, liveAqi, liveLocText, liveLocDesc, onVi
             <div className="kpi-tip-reason">On a typical day the AQI is around <strong>{mean_overall}</strong>, falling in the {catStr2} category — sensitive groups may feel discomfort.</div>
           </>}
         />
-        <KpiCard label="Unhealthy Days" value={total_spikes}
+        <KpiCard label="Unhealthy Days" value={total_spikes} tooltipLeft
           sub={<span style={{ color: 'var(--poor)' }}>~{Math.round(total_spikes / 6)}/yr · AQI &gt;200</span>}
           tooltip={<>
             <div className="kpi-tip-title">🤔 What are these {total_spikes} days?</div>
@@ -146,14 +167,19 @@ export default function KPICards({ data, liveAqi, liveLocText, liveLocDesc, onVi
   );
 }
 
-function KpiCard({ label, value, sub, tooltip }) {
+function KpiCard({ label, value, sub, tooltip, tooltipLeft = false }) {
   const [visible, setVisible] = useState(false);
   const [coords, setCoords]   = useState({ top: 0, left: 0 });
   const btnRef = useRef(null);
 
   const handleMouseEnter = () => {
     const rect = btnRef.current.getBoundingClientRect();
-    setCoords({ top: rect.bottom + window.scrollY + 10, left: rect.left + window.scrollX + rect.width / 2 });
+    setCoords({
+      top:  rect.bottom + window.scrollY + 10,
+      left: tooltipLeft
+        ? rect.right + window.scrollX - 280   // anchor right edge to button
+        : rect.left  + window.scrollX + rect.width / 2,
+    });
     setVisible(true);
   };
 
@@ -181,7 +207,8 @@ function KpiCard({ label, value, sub, tooltip }) {
           transition={{ duration: 0.15, ease: [0.0, 0.0, 0.2, 1.0] }}
           style={{
             position: 'absolute', top: coords.top, left: coords.left,
-            transform: 'translateX(-50%)', background: '#0f172a', color: 'white',
+            transform: tooltipLeft ? 'translateX(0)' : 'translateX(-50%)',
+            background: '#0f172a', color: 'white',
             padding: '14px 16px', borderRadius: 12, width: 280, zIndex: 99999,
             boxShadow: '0 24px 48px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.06)',
             border: '1px solid #334155', fontSize: '0.8125rem', lineHeight: 1.6, pointerEvents: 'auto',

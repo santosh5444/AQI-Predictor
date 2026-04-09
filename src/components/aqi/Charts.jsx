@@ -191,14 +191,30 @@ export function PollutantChart({ data }) {
         datasets: [{
           label: 'Recent Avg µg/m³',
           data: [data['PM2.5'], data['PM10'], data['NO2'], data['SO2']],
-          backgroundColor: 'rgba(59,130,246,0.12)', borderColor: '#3b82f6',
-          pointBackgroundColor: '#3b82f6', pointBorderColor: '#fff', pointBorderWidth: 2, borderWidth: 2,
+          backgroundColor: 'rgba(100,116,139,0.10)',
+          borderColor: '#475569',
+          pointBackgroundColor: '#334155',
+          pointBorderColor: '#fff',
+          pointBorderWidth: 2,
+          borderWidth: 2,
         }],
       },
       options: {
         responsive: true, maintainAspectRatio: false,
-        plugins: { legend: { display: true, position: 'bottom', labels: { boxWidth: 10, padding: 12, font: { size: 11 } } } },
-        scales: { r: { grid: { color: '#f1f5f9' }, ticks: { display: false } } },
+        plugins: {
+          legend: {
+            display: true, position: 'bottom',
+            labels: { boxWidth: 10, padding: 12, font: { size: 11 }, color: '#475569' },
+          },
+        },
+        scales: {
+          r: {
+            grid:       { color: 'rgba(71,85,105,0.20)' },
+            angleLines: { color: 'rgba(71,85,105,0.20)' },
+            pointLabels:{ color: '#334155', font: { size: 11, weight: '600' } },
+            ticks:      { display: false },
+          },
+        },
       },
     });
     return () => chart.destroy();

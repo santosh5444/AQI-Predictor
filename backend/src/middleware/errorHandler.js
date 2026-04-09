@@ -1,4 +1,4 @@
-/* global module, console */
+/* global module */
 'use strict';
 
 // 404 — no route matched

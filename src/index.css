@@ -159,17 +159,57 @@ h1, h2, h3, h4 { color: var(--primary); font-weight: 600; line-height: 1.3; }
 
 /* ── Card ───────────────────────────────────────────────────────────────────── */
 .card {
-  background: var(--card-bg);
+  background: rgba(255, 255, 255, 0.18);
   border-radius: var(--radius-lg);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow-sm);
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
-  /* overflow:hidden removed — it was clipping tooltips */
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.12), inset 0 1px 0 rgba(255,255,255,0.3);
+  backdrop-filter: blur(24px) saturate(200%);
+  -webkit-backdrop-filter: blur(24px) saturate(200%);
+  transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+  position: relative;
+}
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255,255,255,0.22) 0%, transparent 55%);
+  pointer-events: none;
+  z-index: 0;
+}
+.card > * { position: relative; z-index: 1; }
+.card:hover {
+  box-shadow: 0 16px 48px rgba(31, 38, 135, 0.18), inset 0 1px 0 rgba(255,255,255,0.4);
+  border-color: rgba(255, 255, 255, 0.50);
+  transform: translateY(-2px);
 }
 .card-overflow { overflow: hidden; }
-.card:hover {
-  box-shadow: var(--shadow-md);
-  transform: translateY(-1px);
+
+/* ── Dark Glass Card ──────────────────────────────────────────────────────────── */
+.glass-card {
+  background: rgba(10, 18, 38, 0.35);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255,255,255,0.08);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  position: relative;
+}
+.glass-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255,255,255,0.07) 0%, transparent 55%);
+  pointer-events: none;
+  z-index: 0;
+}
+.glass-card > * { position: relative; z-index: 1; }
+.glass-card:hover {
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255,255,255,0.12);
+  border-color: rgba(255, 255, 255, 0.24);
+  transform: translateY(-2px);
 }
 
 /* ── Card Header ────────────────────────────────────────────────────────────── */
@@ -211,6 +251,8 @@ h1, h2, h3, h4 { color: var(--primary); font-weight: 600; line-height: 1.3; }
   border: 1px solid #e2e8f0; transition: all 0.18s ease; flex-shrink: 0;
 }
 .kpi-info-btn:hover { background: var(--accent); color: white; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(59,130,246,0.15); }
+
+/* Default tooltip — opens below, centred */
 .kpi-tooltip {
   visibility: hidden; opacity: 0;
   position: absolute; top: calc(100% + 10px); left: 50%;
@@ -229,6 +271,19 @@ h1, h2, h3, h4 { color: var(--primary); font-weight: 600; line-height: 1.3; }
   border: 6px solid transparent; border-bottom-color: #0f172a;
 }
 .kpi-tooltip-wrap:hover .kpi-tooltip { visibility: visible; opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* Last card tooltip — anchor to right so it doesn’t overflow viewport */
+.kpi-tooltip-left {
+  left: auto;
+  right: 0;
+  transform: translateX(0) translateY(-6px);
+}
+.kpi-tooltip-left::after {
+  left: auto;
+  right: 14px;
+  transform: translateX(0);
+}
+.kpi-tooltip-wrap:hover .kpi-tooltip-left { transform: translateX(0) translateY(0); }
 .kpi-tip-title { font-weight: 700; font-size: 0.875rem; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.08); }
 .kpi-tip-row   { display: flex; gap: 8px; margin-bottom: 5px; font-size: 0.78rem; }
 .kpi-tip-row span:first-child { color: #64748b; min-width: 76px; flex-shrink: 0; }
@@ -327,29 +382,36 @@ h1, h2, h3, h4 { color: var(--primary); font-weight: 600; line-height: 1.3; }
 /* ── Spike Events ───────────────────────────────────────────────────────────── */
 .spike-list { display: flex; flex-direction: column; gap: 12px; max-height: 480px; overflow-y: auto; padding-right: 4px; }
 .spike-item {
-  background: linear-gradient(to right, rgba(239,68,68,0.04), #fff);
-  border-left: 3px solid #ef4444;
+  background: linear-gradient(135deg, rgba(255,255,255,0.13), rgba(255,255,255,0.06));
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-left: 4px solid #ef4444;
   padding: 14px 16px;
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  box-shadow: var(--shadow-xs);
-  transition: box-shadow 0.18s ease;
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
-.spike-item:hover { box-shadow: var(--shadow-sm); }
+.spike-item:hover { box-shadow: 0 8px 28px rgba(0,0,0,0.18); transform: translateY(-1px); }
 .spike-head { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; font-weight: 600; margin-bottom: 6px; }
 .spike-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
-.spike-tag  { font-size: 0.75rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 3px 8px; color: #475569; font-weight: 500; }
+.spike-tag  { font-size: 0.75rem; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; padding: 3px 8px; color: rgba(255,255,255,0.75); font-weight: 500; }
 
 /* ── AOD Event Cards ────────────────────────────────────────────────────────── */
 .aod-event-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; margin-top: 8px; }
 @media (max-width: 640px) { .aod-event-grid { grid-template-columns: 1fr; } }
 .aod-event-card {
-  background: white; border-radius: var(--radius-md);
-  padding: 16px 18px; border: 1px solid var(--border);
+  background: rgba(255,255,255,0.55);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+  border: 1px solid rgba(255,255,255,0.30);
   border-left: 3px solid #ef4444;
   transition: all 0.2s ease; cursor: pointer;
-  box-shadow: var(--shadow-xs);
+  box-shadow: 0 4px 20px rgba(31,38,135,0.08);
 }
-.aod-event-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.aod-event-card:hover { transform: translateY(-3px); box-shadow: 0 12px 36px rgba(31,38,135,0.14); border-color: rgba(255,255,255,0.55); }
 .aod-event-card.extreme { border-left-color: #7c3aed; }
 .aod-event-card.high    { border-left-color: #ef4444; }
 .aod-event-card.moderate{ border-left-color: #f97316; }

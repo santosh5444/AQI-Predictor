@@ -1,4 +1,4 @@
-/* global require, process, console, __dirname */
+/* global require, process, __dirname */
 'use strict';
 
 // Load .env before anything else — explicit path prevents dotenvx interference
