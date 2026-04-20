@@ -10,6 +10,7 @@ function buildCors() {
     // Always allow these — production URLs
     'https://aqi-predictor-07.vercel.app',
     'https://aqi-predictor-r892.onrender.com',
+    'https://santosh5444.github.io',
     // Local dev
     'http://localhost:5173',
     'http://localhost:3000',
