@@ -152,8 +152,8 @@ export default function KPICards({ data, liveAqi, liveLocText, liveLocDesc, onVi
             <div className="kpi-tip-reason">On a typical day the AQI is around <strong>{mean_overall}</strong>, falling in the {catStr2} category — sensitive groups may feel discomfort.</div>
           </>}
         />
-        <KpiCard label="Unhealthy Days" value={total_spikes} tooltipLeft
-          sub={<span style={{ color: 'var(--poor)' }}>~{Math.round(total_spikes / 6)}/yr · AQI &gt;200</span>}
+        <KpiCard label="Unhealthy Days" value={total_spikes} tooltipLeft className="unhealthy-card"
+          sub={<span style={{ color: '#b91c1c' }}>~{Math.round(total_spikes / 6)}/yr · AQI &gt;200</span>}
           tooltip={<>
             <div className="kpi-tip-title">🤔 What are these {total_spikes} days?</div>
             <div className="kpi-tip-row"><span>Period</span><span>2019–2024</span></div>
@@ -167,7 +167,7 @@ export default function KPICards({ data, liveAqi, liveLocText, liveLocDesc, onVi
   );
 }
 
-function KpiCard({ label, value, sub, tooltip, tooltipLeft = false }) {
+function KpiCard({ label, value, sub, tooltip, tooltipLeft = false, className = '' }) {
   const [visible, setVisible] = useState(false);
   const [coords, setCoords]   = useState({ top: 0, left: 0 });
   const btnRef = useRef(null);
@@ -185,7 +185,7 @@ function KpiCard({ label, value, sub, tooltip, tooltipLeft = false }) {
 
   return (
     <motion.div
-      className="card p-5 flex flex-col justify-between gap-2"
+      className={`card p-5 flex flex-col justify-between gap-2 ${className}`}
       style={{ minHeight: 140 }}
       variants={staggerFlip}
       whileHover={hoverLift}

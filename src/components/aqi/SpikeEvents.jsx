@@ -48,7 +48,7 @@ const SpikeEvents = forwardRef(function SpikeEvents({ events, annualStats }, ref
   if (!events) return null;
 
   return (
-    <div className="glass-card overflow-hidden">
+    <div className="glass-card overflow-hidden" style={{ background: 'rgba(15,23,42,0.65)', border: '1px solid rgba(255,255,255,0.06)' }}>
       {/* Header */}
       <div className="px-5 pt-5 pb-3 flex flex-wrap items-center justify-between gap-3"
            style={{ borderBottom: '1px solid rgba(255,255,255,0.15)' }}>
@@ -88,13 +88,14 @@ const SpikeEvents = forwardRef(function SpikeEvents({ events, annualStats }, ref
                   : { duration: 0.4 }}
                 style={{
                   background: isHighlighted
-                    ? 'linear-gradient(135deg, rgba(59,130,246,0.22), rgba(255,255,255,0.14))'
-                    : 'linear-gradient(135deg, rgba(255,255,255,0.13), rgba(255,255,255,0.06))',
+                    ? 'linear-gradient(135deg, rgba(139,92,246,0.25), rgba(15,23,42,0.8))'
+                    : 'linear-gradient(135deg, rgba(15,23,42,0.85), rgba(30,41,59,0.55))',
                   backdropFilter: 'blur(20px)',
                   WebkitBackdropFilter: 'blur(20px)',
                   border: isHighlighted
-                    ? '1px solid rgba(59,130,246,0.55)'
-                    : '1px solid rgba(255,255,255,0.18)',
+                    ? '1px solid rgba(139,92,246,0.6)'
+                    : '1px solid rgba(148,163,184,0.12)',
+                  boxShadow: '0 4px 16px rgba(0,0,0,0.3)',
                   borderLeft: `4px solid ${getCatColor(s.aqi)}`,
                   borderRadius: 16,
                   padding: '16px 18px',

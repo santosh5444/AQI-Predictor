@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, useScroll, useSpring, useTransform, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import CodeModal from '../components/aqi/CodeModal';
 import KPICards from '../components/aqi/KPICards';
 import LocationExplorer from '../components/aqi/LocationExplorer';
@@ -60,10 +60,6 @@ export default function PredictionPage() {
   const [liveLocText, setLiveLocText] = useState('🚢 Port Road');
   const [liveLocDesc, setLiveLocDesc] = useState('Fetching from Port Road station…');
 
-  // Scroll progress bar
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
-
   /* Register global spike highlight */
   useEffect(() => {
     window.__highlightSpike = (year) => {
@@ -76,7 +72,9 @@ export default function PredictionPage() {
   useEffect(() => {
     fetchLiveAQI(17.695, 83.285, 'Port Road')
       .then(result => {
-        const aqi = Math.max(1, Math.round((result.aqi + 20) * 1.18));
+        const baseAqi = result.aqi * 1.4716;
+        const locScale = 1.18; // Port Road scale
+        const aqi = Math.max(1, Math.round((baseAqi + 20) * locScale));
         setLiveAqi(aqi);
         setLiveLocDesc(result.source === 'satellite' ? 'Live Data (Regional Estimator)' : 'Offline — baseline estimate');
       })
@@ -87,19 +85,6 @@ export default function PredictionPage() {
   useEffect(() => {
     if (window.initAQIBackground) window.initAQIBackground('prediction-bg-canvas');
     return () => { if (window.AQIBackground) window.AQIBackground = null; };
-  }, []);
-
-  /* Ambient cursor glow */
-  useEffect(() => {
-    const glow = document.createElement('div');
-    glow.style.cssText = 'position:fixed;pointer-events:none;width:480px;height:480px;background:radial-gradient(circle,rgba(59,130,246,0.07) 0%,transparent 68%);border-radius:50%;z-index:0;opacity:0;top:0;left:0;transition:opacity 0.4s;will-change:transform;';
-    document.body.appendChild(glow);
-    const onMove = e => {
-      glow.style.transform = `translate(${e.clientX - 240}px,${e.clientY - 240}px)`;
-      glow.style.opacity = '1';
-    };
-    document.addEventListener('mousemove', onMove);
-    return () => { document.removeEventListener('mousemove', onMove); glow.remove(); };
   }, []);
 
   const handleLocationSelect = loc => {
@@ -122,15 +107,6 @@ export default function PredictionPage() {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5, ease: 'easeOut' }}
     >
-      {/* ── Scroll progress bar ── */}
-      <motion.div
-        style={{
-          scaleX, transformOrigin: 'left',
-          position: 'fixed', top: 56, left: 0, right: 0,
-          height: 3, background: 'linear-gradient(90deg,#3b82f6,#a78bfa,#34d399)',
-          zIndex: 9999,
-        }}
-      />
 
       {/* ── Animated canvas background ── */}
       <canvas
@@ -146,7 +122,7 @@ export default function PredictionPage() {
 
       <CodeModal open={codeOpen} onClose={() => setCodeOpen(false)} />
 
-      <main className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-8 relative z-10">
+      <main className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-8 relative z-10">
 
         {/* KPI Cards — slide up on load */}
         <motion.div

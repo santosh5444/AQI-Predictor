@@ -22,13 +22,13 @@ const VEHICLE_COLORS = [
 ];
 
 const VEHICLE_PATHS = {
-    sedanBody:      new Path2D('M0,38 L0,23 L15,21 L28,10 L58,10 L68,21 L85,24 L85,38 Z'),
-    sedanWindows:   new Path2D('M30,12 L56,12 L64,21 L22,21 Z'),
-    lorryContainer: new Path2D('M0,5 L80,5 L80,38 L0,38 Z'),
-    lorryCabin:     new Path2D('M82,15 L108,15 L112,25 L112,38 L82,38 Z'),
-    lorryWindows:   new Path2D('M88,18 L105,18 L108,25 L88,25 Z'),
-    autoBody:       new Path2D('M0,38 L0,18 L6,8 L28,8 L35,22 L38,38 Z'),
-    autoFrame:      new Path2D('M10,12 L26,12 L26,26 L10,26 Z'),
+    sedanBody:      new Path2D('M4,34 C4,28 6,24 16,22 C30,12 45,10 60,10 C75,10 84,20 88,24 C100,24 100,34 96,38 L4,38 Z'),
+    sedanWindows:   new Path2D('M32,12 L56,12 C64,12 70,16 78,21 L22,21 C24,18 28,12 32,12 Z'),
+    lorryContainer: new Path2D('M0,4 C0,2 2,0 4,0 L84,0 C86,0 88,2 88,4 L88,38 L0,38 Z'),
+    lorryCabin:     new Path2D('M90,14 C90,12 92,10 94,10 L112,10 C120,10 125,18 126,24 L126,38 L90,38 Z'),
+    lorryWindows:   new Path2D('M96,14 L110,14 C116,14 118,18 120,24 L96,24 Z'),
+    autoBody:       new Path2D('M4,38 L4,18 C4,10 8,6 18,6 L26,6 C34,6 38,14 42,24 L46,38 Z'),
+    autoFrame:      new Path2D('M10,10 L24,10 C28,10 30,12 32,16 L32,24 L10,24 Z'),
     wheelRim:       new Path2D('M0,0 m-5,0 a5,5 0 1,0 10,0 a5,5 0 1,0 -10,0 M0,0 m-2,0 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0'),
 };
 
@@ -47,27 +47,35 @@ class Vehicle {
         this.smokeCounter = 0;
         this.interactionTimer = 0;
 
-        if (type === 'truck')      { this.scale = 0.85; this.width = 112 * 0.85; this.height = 38 * 0.85; }
-        else if (type === 'auto')  { this.scale = 0.95; this.width = 38 * 0.95;  this.height = 38 * 0.95; }
-        else if (type === 'bike')  { this.scale = 0.7;  this.width = 36;          this.height = 28; }
-        else if (type === 'moto')  { this.scale = 0.75; this.width = 42;          this.height = 30; }
-        else                       { this.scale = 1.0;  this.width = 85;          this.height = 38; }
+        if (type === 'truck')      { this.scale = 0.85; this.width = 126 * 0.85; this.height = 46 * 0.85; }
+        else if (type === 'auto')  { this.scale = 0.95; this.width = 46 * 0.95;  this.height = 46 * 0.95; }
+        else if (type === 'bike')  { this.scale = 0.70; this.width = 44 * 0.70;  this.height = 38 * 0.70; }
+        else if (type === 'moto')  { this.scale = 0.75; this.width = 50 * 0.75;  this.height = 42 * 0.75; }
+        else                       { this.scale = 1.00; this.width = 100;        this.height = 46; }
     }
 
     update(aqi, mouse = null) {
         let targetSpeed = this.baseSpeed;
+        this.isBraking = false;
         if (mouse && mouse.x > -100) {
             const dx = this.x + this.width / 2 - mouse.x;
-            const dy = this.y - mouse.y;
-            if (Math.sqrt(dx * dx + dy * dy) < 100) {
-                targetSpeed *= 0.5;
-                this.interactionTimer = Math.min(this.interactionTimer + 0.1, 1);
+            const dy = this.y + this.height / 2 - mouse.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 200) {
+                // Smooth hysteresis to prevent vibrating/jittering at the braking threshold
+                const factor = Math.min(1, Math.max(0, (200 - dist) / 100));
+                targetSpeed = this.baseSpeed * (1 - factor * 0.85); 
+                this.isBraking = factor > 0.05;
+                this.interactionTimer = Math.min(this.interactionTimer + 0.15, 1);
             } else {
                 this.interactionTimer = Math.max(this.interactionTimer - 0.05, 0);
             }
         }
-        this.speed += (targetSpeed - this.speed) * 0.1;
+        const accel = targetSpeed - this.speed;
+        this.speed += accel * 0.15;
         this.x += this.speed;
+        this.tilt = (accel / this.baseSpeed) * -8 * (this.speed > 0 ? 1 : -1);
+        
         if (this.x > window.innerWidth + 200) this.x = -200;
         if (this.x < -200) this.x = window.innerWidth + 200;
 
@@ -90,7 +98,10 @@ class Vehicle {
         ctx.ellipse(this.x + this.width / 2, this.y + this.height, this.width * 0.55, 5, 0, 0, Math.PI * 2);
         ctx.fill();
 
-        ctx.translate(Math.round(this.x), Math.round(this.y + this.bounce));
+        ctx.translate(Math.round(this.x + this.width / 2), Math.round(this.y + this.bounce + this.height));
+        if (this.tilt) ctx.rotate(this.tilt * Math.PI / 180);
+        ctx.translate(-this.width / 2, -this.height);
+        
         const flip = this.speed < 0 ? -1 : 1;
         ctx.scale(this.scale * flip, this.scale);
         if (this.speed < 0) ctx.translate(-this.width / this.scale, 0);
@@ -134,15 +145,25 @@ class Vehicle {
             ctx.strokeStyle = this.palette.rims; ctx.lineWidth = 1.6; ctx.stroke(VEHICLE_PATHS.wheelRim);
             ctx.restore();
         };
-        if (this.type === 'truck')     { drawWheel(15, 38); drawWheel(30, 38); drawWheel(95, 38); }
-        else if (this.type === 'auto') { drawWheel(8, 38); drawWheel(32, 38); }
-        else                           { drawWheel(22, 38); drawWheel(68, 38); }
+        if (this.type === 'truck')     { drawWheel(15, 38); drawWheel(30, 38); drawWheel(105, 38); }
+        else if (this.type === 'auto') { drawWheel(8, 38); drawWheel(34, 38); }
+        else                           { drawWheel(22, 38); drawWheel(78, 38); }
 
         // Headlight
-        const hx = this.type === 'truck' ? 110 : this.type === 'auto' ? 36 : 82;
-        const hy = this.type === 'truck' ? 30  : this.type === 'auto' ? 24 : 30;
+        const hx = this.type === 'truck' ? 126 : this.type === 'auto' ? 44 : 96;
+        const hy = this.type === 'truck' ? 30  : this.type === 'auto' ? 24 : 26;
         ctx.fillStyle = `rgba(254,240,138,${0.4 + this.interactionTimer * 0.4})`;
         ctx.beginPath(); ctx.arc(hx, hy, 5 + this.interactionTimer * 3, 0, Math.PI * 2); ctx.fill();
+
+        // Brake lights / Tail lights
+        const bx = this.type === 'truck' ? 2 : this.type === 'auto' ? 4 : 4;
+        const by = this.type === 'truck' ? 30 : this.type === 'auto' ? 22 : 22;
+        ctx.fillStyle = this.isBraking ? '#ef4444' : '#7f1d1d';
+        ctx.beginPath(); ctx.arc(bx, by, this.isBraking ? 4 : 2, 0, Math.PI * 2); ctx.fill();
+        if (this.isBraking) {
+            ctx.fillStyle = 'rgba(239,68,68,0.4)';
+            ctx.beginPath(); ctx.arc(bx - 2, by, 8, 0, Math.PI * 2); ctx.fill();
+        }
     }
 
     _drawBike(ctx) {

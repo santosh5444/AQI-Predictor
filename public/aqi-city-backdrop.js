@@ -91,13 +91,24 @@ class BackdropSystem {
         const stack = (x, ht, wd = 22) => {
             const bx = w * x - wd / 2, by = this.groundY - ht;
             const g = this.ctx.createLinearGradient(bx, by, bx + wd, by);
-            g.addColorStop(0, 'rgba(15,23,42,0.18)'); g.addColorStop(1, 'rgba(15,23,42,0.30)');
+            g.addColorStop(0, 'rgba(15,23,42,0.5)'); g.addColorStop(1, 'rgba(15,23,42,0.85)');
             this.ctx.fillStyle = g; this.ctx.fillRect(bx, by, wd, ht);
-            this.ctx.fillStyle = 'rgba(15,23,42,0.35)'; this.ctx.fillRect(bx - 3, by, wd + 6, 7);
-            emitSmoke(bx + wd / 2, by, true);
+            this.ctx.fillStyle = 'rgba(15,23,42,0.95)'; this.ctx.fillRect(bx - 4, by, wd + 8, 7);
+            
+            // Aviation obstruction light
+            if (Date.now() % 2000 < 1000) {
+                this.ctx.fillStyle = '#ef4444';
+                this.ctx.fillRect(bx + wd / 2 - 2, by - 5, 4, 4);
+                this.ctx.shadowBlur = 10;
+                this.ctx.shadowColor = '#ef4444';
+                this.ctx.fillRect(bx + wd / 2 - 1, by - 4, 3, 3);
+                this.ctx.shadowBlur = 0;
+            }
+            emitSmoke(bx + wd / 2, by - 5, true);
         };
-        stack(0.04, h * 0.38, 22); stack(0.08, h * 0.22, 16);
-        stack(0.92, h * 0.28, 20); stack(0.96, h * 0.42, 26);
+        // Taller, wider pipes on the extreme edges so they aren't covered by the dashboard
+        stack(0.015, h * 0.56, 34); stack(0.045, h * 0.36, 26);
+        stack(0.955, h * 0.40, 30); stack(0.985, h * 0.48, 38);
     }
 
     drawIndustrial(emitSmoke) {
@@ -205,13 +216,13 @@ class Airplane {
         }
 
         // Zig-zag vertical motion
-        this.zigPhase += 0.018;
-        const targetY = this.baseY + Math.sin(this.zigPhase) * 80;
-        this.y += (targetY - this.y) * 0.04;
+        this.zigPhase += 0.008;
+        const targetY = this.baseY + Math.sin(this.zigPhase) * 15;
+        this.y += (targetY - this.y) * 0.02;
 
         // Bank angle follows the zig-zag direction
         const dy = targetY - this.y;
-        this.angle = Math.atan2(dy, 60) * 0.5;
+        this.angle = Math.atan2(dy, 80) * 0.3;
 
         this.lightPhase += 0.05;
 

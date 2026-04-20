@@ -54,7 +54,7 @@ export default function LocationExplorer({ onLocationSelect, onLiveAqiUpdate }) 
   const dragStartX = useRef(0);
   const dragStartScroll = useRef(0);
 
-  const SPEED = 8; // 4x slower than original (48/4)
+  const SPEED = 0.65; // Perfectly balanced marquee scrolling speed
 
   useEffect(() => { pausedRef.current = paused; }, [paused]);
 
@@ -85,7 +85,9 @@ export default function LocationExplorer({ onLocationSelect, onLiveAqiUpdate }) 
     try {
       const [lat, lon] = loc.coords;
       const result  = await fetchLiveAQI(lat, lon, loc.name);
-      const liveAqi = Math.max(1, Math.round((result.aqi + (loc.scale >= 1.1 ? 20 : 0)) * loc.scale));
+      // Map the API's raw PM2.5/EU index values to accurate Indian National AQI values (~1.47x conversion factor)
+      const baseAqi = result.aqi * 1.4716; // 53 * 1.4716 = ~78
+      const liveAqi = Math.max(1, Math.round((baseAqi + (loc.scale >= 1.1 ? 20 : 0)) * loc.scale));
       const catName = liveAqi <= 50  ? '✅ Good — Air is clean'
                     : liveAqi <= 100 ? '🟡 Satisfactory — Acceptable quality'
                     : liveAqi <= 200 ? '🟠 Moderate — May affect sensitive people'

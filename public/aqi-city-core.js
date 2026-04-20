@@ -32,11 +32,30 @@ class CitySimulation {
     }
 
     initEvents() {
+        // Desktop mouse support
         window.addEventListener('mousemove', e => {
             this.mouse.x = e.clientX;
             this.mouse.y = e.clientY;
         });
         window.addEventListener('mouseleave', () => {
+            this.mouse.x = -1000;
+            this.mouse.y = -1000;
+        });
+
+        // Mobile touch support
+        window.addEventListener('touchstart', e => {
+            if (e.touches.length > 0) {
+                this.mouse.x = e.touches[0].clientX;
+                this.mouse.y = e.touches[0].clientY;
+            }
+        }, { passive: true });
+        window.addEventListener('touchmove', e => {
+            if (e.touches.length > 0) {
+                this.mouse.x = e.touches[0].clientX;
+                this.mouse.y = e.touches[0].clientY;
+            }
+        }, { passive: true });
+        window.addEventListener('touchend', () => {
             this.mouse.x = -1000;
             this.mouse.y = -1000;
         });
