@@ -8,7 +8,7 @@ const TEAM = [
   { name: "HemaChandu", role: "Lead Developer", url: "https://www.linkedin.com/in/hemachandu-animireddy/" },
   { name: "Pranathi",   role: "Developer",      url: "https://www.linkedin.com/in/pranathi-adari-875913330?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" },
   { name: "Nirmal",     role: "Developer",      url: "https://www.linkedin.com/in/nirmal-arikireddy-8127b4328?utm_source=share_via&utm_content=profile&utm_medium=member_android" },
-  { name: "Sowmya",     role: "Developer",      url: "#" },
+  { name: "Sowmya",     role: "Developer",      url: "https://www.linkedin.com/in/sowmya-bobbadi-546188405?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" },
 ];
 
 const LinkedInIcon = () => (
