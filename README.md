@@ -228,7 +228,7 @@ GitHub Actions · CI/CD Pipeline
 
 ```bash
 # 1️⃣ Clone repository
-git clone https://github.com/TheLucifer-07/AQI-Predictor
+git clone https://github.com/santosh5444/AQI-Predictor
 cd AQI-Predictor
 
 # 2️⃣ Frontend Setup
@@ -485,7 +485,7 @@ AQI-Predictor/
 ### 1️⃣ Clone the repository
 
 ```bash
-git clone https://github.com/TheLucifer-07/AQI-Predictor.git
+git clone https://github.com/santosh5444/AQI-Predictor.git
 cd AQI-Predictor
 ```
 
@@ -543,7 +543,7 @@ npm run dev
 
 ## 👨‍💻 Author
 
-**Hemachandu Animireddy**
+**santosh**
 
 
 
